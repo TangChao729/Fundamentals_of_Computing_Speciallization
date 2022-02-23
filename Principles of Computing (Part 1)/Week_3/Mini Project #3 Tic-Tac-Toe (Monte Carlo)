@@ -1,0 +1,197 @@
+# https://py2.codeskulptor.org/#user48_vpLUHOgUVY_8.py
+
+"""
+Monte Carlo Tic-Tac-Toe Player
+"""
+
+import random
+import poc_ttt_gui
+import poc_ttt_provided as provided
+
+# Available imported fucntions list:
+# TTTboard class functions:
+# board.get_dim 
+# """
+# Return the dimension of the board.
+# """
+#
+# board.square 
+# """
+# Returns one of the three constants EMPTY, PLAYERX, or PLAYERO 
+# that correspond to the contents of the board at position (row, col).
+# """
+#
+# board.get_empty_squares
+# """
+# Return a list of (row, col) tuples for all empty squares
+# """
+#
+# board.move
+# """
+# Place player on the board at position (row, col).
+# player should be either the constant PLAYERX or PLAYERO.
+# Does nothing if board square is not empty.
+# """
+#
+# board.check_win
+# """
+# Returns a constant associated with the state of the game
+# If PLAYERX wins, returns PLAYERX.
+# If PLAYERO wins, returns PLAYERO.
+# If game is drawn, returns DRAW.
+# If game is in progress, returns None.
+# """
+#
+# board.clone
+# """
+# Return a copy of the board.
+# """
+#
+# provided,switch_player
+# """
+# Convenience function to switch players.
+# Returns other player.
+# """
+#
+# provided.play_game
+# """
+# Function to play a game with two MC players.
+# """
+
+# Constants for Monte Carlo simulator
+# You may change the values of these constants as desired, but
+#  do not change their names.
+NTRIALS = 20         # Number of trials to run
+SCORE_CURRENT = 1.0 # Score for squares played by the current player
+SCORE_OTHER = 1.0   # Score for squares played by the other player
+
+DRAW = provided.DRAW
+EMPTY = provided.EMPTY
+
+def mc_trial(board, player):
+    """
+    This function is to simulate one trial, while the given condition is the current board and the current player.
+    Then use board.move function for the next move.
+    Until one player win.
+    As this is one of the sub-function for the big process, it does not return anything.
+    """
+
+    # Common MC move: run until a break (usually the end of the game)
+    while board.check_win() == None:
+        
+        # Use provided.funtions
+        empty_space_list = board.get_empty_squares()
+         
+        # Note, use random move here. 
+        # This is for the MC_trial purpose. 
+        row, col = empty_space_list[random.randrange(len(empty_space_list))]
+        
+        # Use provided.functions here.
+        board.move(row, col, player)
+        
+        # However, switch player before continue
+        player = provided.switch_player(player)
+        
+    # This function does not return anything.
+    # The function should modify the board input.
+    # To use this function, it is actually running in the mc_move function.
+    # Therefore, this is actually a part of the other function.
+
+def mc_update_scores(scores, board, player):
+    """
+    This function is to assess the board and score the board.
+    Given condition are current scores, current board and current player
+    """
+    
+    if board.check_win() == DRAW:
+        pass
+    
+    else:
+        dimension = board.get_dim()
+        for dummy_row in range(dimension):
+            for dummy_col in range(dimension):
+                
+                square_status = board.square(dummy_row, dummy_col)
+                # """
+                # Returns one of the three constants EMPTY, PLAYERX, or PLAYERO 
+                # that correspond to the contents of the board at position (row, col).
+                # """
+                
+                if square_status == EMPTY:
+                    scores[dummy_row][dummy_col] += 0
+                
+                # for none-EMPTY squares
+                elif board.check_win() == player:
+                    if square_status == player:
+                        scores[dummy_row][dummy_col] += SCORE_CURRENT
+                    
+                    else:
+                        scores[dummy_row][dummy_col] += -SCORE_OTHER
+                       
+                
+                elif board.check_win() != player:
+                    if square_status == player:
+                        scores[dummy_row][dummy_col] += -SCORE_CURRENT
+                    
+                    else:
+                        scores[dummy_row][dummy_col] += SCORE_OTHER
+                
+    # This function does not return anything.
+    # The function should modify the board input.
+    # To use this function, it is actually running in the mc_move function.
+    # Therefore, this is actually a part of the other function.
+
+
+def get_best_move(board, scores):
+    """
+    This function is to use the current board and current scores to evaluate which move is the best move.
+    """
+    empty_squares = board.get_empty_squares()
+    
+    if empty_squares == None:
+        pass
+    
+    else:
+        square_scores = {}
+        max_squares = []
+        
+        # find max value from squares
+        for dummy_square in empty_squares:
+            row = dummy_square[0]
+            col = dummy_square[1]
+            square_scores[dummy_square] = scores[row][col]
+        max_score = max(square_scores.values())
+        
+        # if more than one max_score exist, get a list
+        for dummy_square, dummy_score in square_scores.items():
+            if dummy_score == max_score:
+                max_squares.append(dummy_square)
+        
+        # random chose from max_score list
+        random_max_square = random.choice(max_squares)
+
+        return random_max_square
+
+def mc_move(board, player, trials):
+    """
+    This is where the simulation (MC) happen
+    """
+    trial_board = board.clone()
+    
+    score_board = [ [0 for dummy_col in range(board.get_dim())] for dummy_row in range(board.get_dim())]
+    
+    for dummy_i in range(trials):
+        mc_trial(trial_board, player)
+        mc_update_scores(score_board, trial_board, player)
+        trial_board = board.clone()
+    
+    return get_best_move(board, score_board)
+
+# Test game with the console or the GUI.  Uncomment whichever 
+# you prefer.  Both should be commented out when you submit 
+# for testing to save time.
+
+# This is used to simulate two machine player's move
+provided.play_game(mc_move, NTRIALS, False)       
+# This is GUI game board.
+poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, NTRIALS, False)
