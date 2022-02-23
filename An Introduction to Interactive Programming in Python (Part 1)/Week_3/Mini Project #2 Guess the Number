@@ -1,0 +1,112 @@
+# https://py2.codeskulptor.org/#user48_iyZapZUT0C_5.py
+
+# template for "Guess the number" mini-project
+# input will come from buttons and an input field
+# all output for the game will be printed in the console
+import simplegui
+import random
+
+secret_number = 0
+current_guess = 0
+remain_guess = 0
+min_range = 0
+max_range = 0
+
+# helper function to start and restart the game
+def new_game():
+    # initialize global variables used in your code here
+    #global secret_number, current_guess, remain_guess, min_range, max_range
+    #secret_number = 0
+    #current_guess = 0
+    #remain_guess = 0
+    #min_range = 0
+    #max_range = 0
+    
+    print "New game. Range is from " + str(min_range) + " to " + str(max_range)
+    print "Number of remaining guesses is " + str(remain_guess)
+    
+ 
+    
+
+# define event handlers for control panel
+def range100():
+# button that changes the range to [0,100) and starts a new game 
+    global secret_number, min_range, max_range,remain_guess
+    min_range = 0
+    max_range = 99
+    remain_guess = 7
+    secret_number = random.randrange(0,100)
+    print "---------------------------"
+    print "---- Starting New Game ----"
+    print "---------------------------"
+    new_game()
+    return secret_number
+    
+
+def range1000():
+    # button that changes the range to [0,1000) and starts a new game     
+    global secret_number, min_range, max_range,remain_guess
+    min_range = 0
+    max_range = 999
+    remain_guess = 10
+    secret_number = random.randrange(0,1000)
+    print "---------------------------"
+    print "---- Starting New Game ----"
+    print "---------------------------"
+    new_game()
+    return secret_number
+
+    
+def input_guess(guess):
+    global current_guess
+    global remain_guess
+    current_guess = int(guess)
+    #return current_guess
+    print "--- Guess was " + str(current_guess) + " ---"
+    #print "--- Current secret number is " + str(secret_number) + " ---"
+    
+    if max_range == 0:
+        print "Please choose guess range."
+    
+    elif current_guess == secret_number:
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+        print "%% Great, you guessed right! %%"
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+        
+        print "Please choose range to start a new game"
+        print ""
+        print ""
+    
+    elif remain_guess == 1:
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+        print "%% You used all chances, good luck next round. %%"
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+        
+        print "Please choose range to start a new game"
+        print ""
+        print ""
+    
+    elif current_guess > secret_number:         
+        remain_guess -= 1
+        print "Guess lower"
+        print "Remaining guess: " + str(remain_guess)
+    
+    elif current_guess < secret_number:         
+        remain_guess -= 1
+        print "Guess higher" 
+        print "Remaining guess: " + str(remain_guess)
+
+    
+    
+# create frame
+
+frame = simplegui.create_frame("Guess the number",200,200)
+frame.add_button("Range 0 to 100", range100, 100)
+frame.add_button("Range 0 to 1000", range1000, 100)
+frame.add_input("Your guess",input_guess,50)
+
+# register event handlers for control elements and start frame
+
+frame.start()
+
+# always remember to check your completed program against the grading rubric
