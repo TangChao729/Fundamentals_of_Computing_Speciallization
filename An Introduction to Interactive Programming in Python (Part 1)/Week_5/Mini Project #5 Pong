@@ -1,0 +1,196 @@
+# https://py2.codeskulptor.org/#user48_Z6508XeNh3_7.py
+
+# Implementation of classic arcade game Pong
+
+import simplegui
+import random
+
+# initialize globals - pos and vel encode vertical info for paddles
+WIDTH = 600
+HEIGHT = 400       
+BALL_RADIUS = 20
+PAD_WIDTH = 8
+PAD_HEIGHT = 80
+HALF_PAD_WIDTH = PAD_WIDTH / 2
+HALF_PAD_HEIGHT = PAD_HEIGHT / 2
+LEFT = False
+RIGHT = True
+direction = random.randrange(0,3,2)-1
+time = 0
+
+ball_pos = [WIDTH / 2, HEIGHT / 2]
+ball_vel = [0, 0]
+
+l_paddle_cent = [HALF_PAD_WIDTH, HEIGHT / 2]
+l_paddle_pos = []
+l_paddle_vel = [0, 0]
+
+r_paddle_cent = [WIDTH - HALF_PAD_WIDTH, HEIGHT / 2]
+r_paddle_pos = []
+r_paddle_vel = [0, 0]
+
+red_score = 0
+blue_score = 0
+
+acc = 1.0 / 10.0
+
+# initialize ball_pos and ball_vel for new bal in middle of table
+# if direction is RIGHT, the ball's velocity is upper right, else upper left
+def spawn_ball():
+    global ball_pos, ball_vel, direction # these are vectors stored as lists
+    ball_pos = [WIDTH / 2, HEIGHT / 2]
+    
+    #fixed starting shooting speed, shooting to pre winner
+   
+    ball_vel[0] = direction
+         
+    #random shooting angle
+    ball_vel[1] = float(random.randrange(1,6))/5
+
+# define event handlers
+def new_game():
+    global ball_pos, ball_vel, r_paddle_cent, r_paddle_pos  # these are numbers
+    global red_score, blue_score  # these are ints
+    spawn_ball()
+
+    l_paddle_pos = [[l_paddle_cent[0] - HALF_PAD_WIDTH, l_paddle_cent[1] - HALF_PAD_HEIGHT],
+                    [l_paddle_cent[0] + HALF_PAD_WIDTH, l_paddle_cent[1] - HALF_PAD_HEIGHT],
+                    [l_paddle_cent[0] + HALF_PAD_WIDTH, l_paddle_cent[1] + HALF_PAD_HEIGHT],
+                    [l_paddle_cent[0] - HALF_PAD_WIDTH, l_paddle_cent[1] + HALF_PAD_HEIGHT]]
+    r_paddle_pos = [[r_paddle_cent[0] - HALF_PAD_WIDTH, r_paddle_cent[1] - HALF_PAD_HEIGHT],
+                    [r_paddle_cent[0] + HALF_PAD_WIDTH, r_paddle_cent[1] - HALF_PAD_HEIGHT],
+                    [r_paddle_cent[0] + HALF_PAD_WIDTH, r_paddle_cent[1] + HALF_PAD_HEIGHT],
+                    [r_paddle_cent[0] - HALF_PAD_WIDTH, r_paddle_cent[1] + HALF_PAD_HEIGHT]]
+    red_score = 0
+    blue_score = 0    
+    
+def draw(canvas):
+    global ball_pos, ball_vel, r_paddle_cent, r_paddle_pos
+    global red_score, blue_score, direction
+    global acc
+   
+    # draw mid line and gutters
+    canvas.draw_line([WIDTH / 2, 0],[WIDTH / 2, HEIGHT], 1, "White")
+    canvas.draw_line([PAD_WIDTH, 0],[PAD_WIDTH, HEIGHT], 1, "White")
+    canvas.draw_line([WIDTH - PAD_WIDTH, 0],[WIDTH - PAD_WIDTH, HEIGHT], 1, "White")
+        
+    # update ball
+    ball_pos[0] += ball_vel[0]
+    ball_pos[1] += ball_vel[1]    
+        
+    # draw ball    
+    canvas.draw_circle(ball_pos, BALL_RADIUS, 1, "white","white")
+    
+    # update paddle's vertical position, keep paddle on the screen
+    
+    #figure out lfet paddle 4 cornors 2D location
+    l_paddle_pos = [[l_paddle_cent[0] - HALF_PAD_WIDTH, l_paddle_cent[1] - HALF_PAD_HEIGHT],
+                    [l_paddle_cent[0] + HALF_PAD_WIDTH, l_paddle_cent[1] - HALF_PAD_HEIGHT],
+                    [l_paddle_cent[0] + HALF_PAD_WIDTH, l_paddle_cent[1] + HALF_PAD_HEIGHT],
+                    [l_paddle_cent[0] - HALF_PAD_WIDTH, l_paddle_cent[1] + HALF_PAD_HEIGHT]]
+    
+    #figure out right paddle 4 cornors 2D location
+    r_paddle_pos = [[r_paddle_cent[0] - HALF_PAD_WIDTH, r_paddle_cent[1] - HALF_PAD_HEIGHT],
+                    [r_paddle_cent[0] + HALF_PAD_WIDTH, r_paddle_cent[1] - HALF_PAD_HEIGHT],
+                    [r_paddle_cent[0] + HALF_PAD_WIDTH, r_paddle_cent[1] + HALF_PAD_HEIGHT],
+                    [r_paddle_cent[0] - HALF_PAD_WIDTH, r_paddle_cent[1] + HALF_PAD_HEIGHT]]
+    
+    #check if top of right paddle is touching edge
+    if HALF_PAD_HEIGHT > l_paddle_cent[1]:
+        l_paddle_cent[1] = HALF_PAD_HEIGHT
+        
+    #check if bottom of right paddle is touching edge
+    elif l_paddle_cent[1] > HEIGHT - HALF_PAD_HEIGHT:
+        l_paddle_cent[1] = HEIGHT - HALF_PAD_HEIGHT
+    
+    #check if top of right paddle is touching edge
+    elif HALF_PAD_HEIGHT > r_paddle_cent[1]:
+        r_paddle_cent[1] = HALF_PAD_HEIGHT
+        
+    #check if bottom of right paddle is touching edge
+    elif r_paddle_cent[1] > HEIGHT - HALF_PAD_HEIGHT:
+        r_paddle_cent[1] = HEIGHT - HALF_PAD_HEIGHT
+    #if both not, move paddle
+    else:   
+        l_paddle_cent[1] += l_paddle_vel[1]
+        r_paddle_cent[1] += r_paddle_vel[1]
+    
+    # draw paddles
+    canvas.draw_polygon(l_paddle_pos, 2, "white","red")
+    canvas.draw_polygon(r_paddle_pos, 2, "white","blue")
+    
+    ## determine whether paddle and ball collide    
+        #Touch bottom    
+    if ball_pos[1] + BALL_RADIUS >= HEIGHT: 
+        ball_vel[1] = - ball_vel[1]        
+    #Touch top    
+    elif ball_pos[1] <= BALL_RADIUS: 
+        ball_vel[1] = - ball_vel[1]   
+    #Touch left paddle then bouce    
+    elif ball_pos[0] - BALL_RADIUS <= PAD_WIDTH and (l_paddle_cent[1] - HALF_PAD_HEIGHT)  <= ball_pos[1] < (l_paddle_cent[1] + HALF_PAD_HEIGHT): 
+        ball_vel[0] = - ball_vel[0] * (1 + acc)     
+    #Touch right paddle then bouce
+    elif ball_pos[0] + BALL_RADIUS >= WIDTH - PAD_WIDTH and (r_paddle_cent[1] - HALF_PAD_HEIGHT)  <= ball_pos[1] < (r_paddle_cent[1] + HALF_PAD_HEIGHT): 
+        ball_vel[0] = - ball_vel[0] * (1 + acc)    
+    #If not bounce left, blue win, reset the game
+    elif ball_pos[0] - BALL_RADIUS <= PAD_WIDTH:      
+        blue_score += 1
+        direction = 1 #shoot right
+        spawn_ball()
+    #If not bounce right, red win, reset the game
+    elif ball_pos[0] + BALL_RADIUS >= WIDTH - PAD_WIDTH:        
+        red_score += 1
+        direction = -1 #shoot left
+        spawn_ball()
+    else:
+        pass
+    
+    # draw scores
+    canvas.draw_text(str(red_score), [200,80], 50, "red")
+    canvas.draw_text(str(blue_score), [400,80], 50, "blue")  
+
+def keydown(key):
+    global paddle1_vel, paddle2_vel, r_paddle_cent
+    #UP key to move right paddle up
+    if key == simplegui.KEY_MAP["w"]:
+        l_paddle_vel[1] = -1
+    #DOWN key to move right paddle up    
+    elif key == simplegui.KEY_MAP["s"]:
+        l_paddle_vel[1] = 1
+        
+    #UP key to move right paddle up
+    elif key == simplegui.KEY_MAP["up"]:
+        r_paddle_vel[1] = -1
+    #DOWN key to move right paddle up    
+    elif key == simplegui.KEY_MAP["down"]:
+        r_paddle_vel[1] = 1
+     
+def keyup(key):
+    global paddle1_vel, paddle2_vel
+    
+    #lift W key to stop right paddle
+    if key == simplegui.KEY_MAP["w"]:
+        l_paddle_vel[1] = 0
+        
+    #lift S key to stop right paddle    
+    elif key == simplegui.KEY_MAP["s"]:
+        l_paddle_vel[1] = 0
+    
+    #lift UP key to stop right paddle
+    if key == simplegui.KEY_MAP["up"]:
+        r_paddle_vel[1] = 0
+        
+    #lift DOWN key to stop right paddle    
+    elif key == simplegui.KEY_MAP["down"]:
+        r_paddle_vel[1] = 0
+
+# create frame
+frame = simplegui.create_frame("Pong", WIDTH, HEIGHT)
+frame.set_draw_handler(draw)
+frame.set_keydown_handler(keydown)
+frame.set_keyup_handler(keyup)
+frame.add_button("Restart", new_game, 100)
+
+# start frame
+new_game()
+frame.start()
