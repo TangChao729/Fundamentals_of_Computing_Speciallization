@@ -1,0 +1,86 @@
+# https://py2.codeskulptor.org/#user48_vhgntnRc3s_2.py
+
+# template for "Stopwatch: The Game"
+
+import simplegui
+
+# define global variables
+total_ticks = 0
+first_click = 0
+
+minute = 0
+second = 0
+tenth_of_sec = 0
+
+current_score = 0
+total_attempt = 0
+
+# define helper function format that converts time
+# in tenths of seconds into formatted string A:BC.D
+def format(t):
+    global minute, second, tenth_of_sec
+    minute = t / 100 / 60  #covert ticks to minute
+    second = t / 100 % 60
+    tenth_of_sec = (t % 100)/10
+    
+    #set rules for format
+    if second < 10:
+        second_f = str(0) + str(second)
+    else:
+        second_f = str(second)
+    
+    return str(minute) + ":" + str(second_f) + ":" + str(tenth_of_sec)
+    
+def judge():
+    global current_score, total_attempt
+    if total_ticks % 100 < 10:
+        current_score += 1
+        total_attempt += 1
+
+    else:
+        total_attempt += 1
+        
+# define event handlers for buttons; "Start", "Stop", "Reset"
+def start():
+    timer.start()
+    
+def stop():
+    if timer.is_running():
+        timer.stop()
+        judge()
+    else:
+        pass
+
+def reset():
+    global total_ticks, current_score, total_attempt
+    total_ticks = 0
+    current_score = 0
+    total_attempt = 0
+
+# define event handler for timer with 0.1 sec interval
+def tick():
+    global total_ticks
+    total_ticks += 1
+
+# define draw handler
+def draw(canvas): 
+    canvas.draw_text(format(total_ticks),[75,120], 50,"Red") #current time
+    canvas.draw_text(str(current_score) + "/" + str(total_attempt),[200,50], 30,"Green") #score
+    
+# create frame and timer
+frame = simplegui.create_frame("Counter with buttons", 300, 200)
+timer = simplegui.create_timer(10,tick)
+
+frame.set_draw_handler(draw)
+#frame.set_draw_handler(score)
+
+# register event handlers
+frame.add_button("Start", start, 100)
+frame.add_button("Stop", stop, 100)
+frame.add_button("Reset", reset, 100)
+
+# start frame
+frame.start()
+#timer.start()
+
+# Please remember to review the grading rubric
