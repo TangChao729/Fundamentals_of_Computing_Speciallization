@@ -1,0 +1,71 @@
+# https://py2.codeskulptor.org/#user48_n0gY0BrbJW_8.py
+
+import simplegui
+import random
+
+list1=range(1,9)
+list2=range(1,9)
+list1.extend(list2)
+random.shuffle(list1)
+state=0
+turn=0
+card1=0
+card2=0
+exposed_list=[False for card in list1]
+def new_game():
+    global cards_list, exposed_list, state, turn, list1,list2
+    list1=range(1,9)
+    list2=range(1,9)
+    list1.extend(list2)
+    random.shuffle(list1)   
+    exposed_list = [False for card in list1]
+    state = 0
+    turn = 0
+    label.set_text("Turns: " +str(turn))
+def mouseclick(pos):
+    global state, exposed_list,turn,card1,card2
+    index=pos[0]//50
+    if exposed_list[index]==False:
+        exposed_list[index] =True
+        if state==0:
+            state =1
+            card1=index
+        elif state==1:
+            turn+=1
+            state=2
+            card2=index
+            label.set_text("Turns: " +str(turn)) 
+        else:
+            state=1
+            if list1[card1] != list1[card2]:
+                exposed_list[card1]=False
+                exposed_list[card2]=False
+                card1 = index
+
+            else:
+                exposed_list[card1] = True
+                exposed_list[card2] = True
+                card1=index
+    else:
+        return
+    
+
+
+def draw(canvas):
+    global n,exposed_list,index,turn
+    for i in range(0,16):
+        if exposed_list[i]==True:
+            canvas.draw_text(str(list1[i]), (i*50+15 , 60), 40, "Yellow")
+        else:
+            canvas.draw_polygon([(i*50, 0),
+                                  ((i+1)*50, 0),
+                                  ((i+1)*50, 100),
+                                  (i*50, 100)],
+                                  5, "White", "Green")
+
+frame = simplegui.create_frame('Testing', 800, 100)
+frame.set_draw_handler(draw)
+frame.set_mouseclick_handler(mouseclick)
+label=frame.add_label('Turns:0')
+button = frame.add_button('Restart', new_game)
+frame.start()
