@@ -1,0 +1,307 @@
+Homework 1
+Latest Submission Grade 90%
+1.
+Question 1
+"Searching is half the fun: life is much more manageable when thought of as a scavenger hunt as opposed to a surprise party." - Jimmy Buffett
+
+“This is the part in the class where that guy says, "Zombies? What zombies?" just before they eat his brains. I don't want to be that guy.”  - Holly Black, Kin
+
+Growth of functions
+Review the math notes on the growth of functions.  Which of the following functions grow at the same rate as  \frac{1}{2} n ^ 2 - 5 n  + 20 
+2
+1
+​
+ n 
+2
+ −5n+20?
+
+
+1 / 1 point
+
+nn
+
+
+
+n^2n 
+2
+ 
+
+
+
+n \log(n)nlog(n)
+
+
+
+n^3n 
+3
+ 
+
+
+
+11
+
+
+Correct
+Correct.  The ratio of n^2n 
+2
+  and \frac{1}{2} n ^ 2 - 5 n  + 20 
+2
+1
+​
+ n 
+2
+ −5n+20 tends to 22 as nn grows large.
+
+2.
+Question 2
+Many algorithms for sorting a list of numbers use comparisons (like greater than or less than) to determine the sorted order of the list.  The problem of building fast sorting algorithms using comparisons is well-studied.  In fact, we will consider a very elegant sorting algorithm of this type next week.  
+
+The fastest algorithms for sorting a list of size nn share a bound (specified as a simple expression in nn) for the minimal number of comparisons required to sort any list of length nn.
+
+Use a web search engine (like Google) to look up this estimate and select the answer below that grows at the same rate as this expression.
+
+
+1 / 1 point
+
+n \log(n)nlog(n) comparisons
+
+
+
+2^n2 
+n
+  comparisons.
+
+
+
+nn comparisons
+
+
+
+n^2n 
+2
+  comparisons.
+
+
+Correct
+Yes.  In fact, you can prove that comparison sorts require some multiple of n \log(n)nlog(n) comparisons to sort a list.
+
+3.
+Question 3
+Review this week's practice activity on sorting strings.   The activity discusses a grid-based method for sorting strings that does not require comparisons.   Given a list of nn three-letter words, which expression grows as the same rate as the number of statements executed during this sort? 
+
+
+1 / 1 point
+
+n^2n 
+2
+ 
+
+
+
+\log(n)log(n)
+
+
+
+nn
+
+
+
+n \log(n)nlog(n)
+
+
+Correct
+Correct.  Remember a constant multiple of nn grows at the same rate as nn.
+
+4.
+Question 4
+Stacks and queues
+Consider a stack in which we have performed nn pushes followed by nn pops. Which of the following are true statements concerning this sequence of operations?
+
+
+1 / 1 point
+
+The last element pushed onto the stack is the first element popped off of the stack.
+
+
+Correct
+
+The first element pushed onto the stack is the last element popped off of the stack.
+
+
+Correct
+
+The first element pushed onto the stack is the first element popped off of the stack.
+
+
+
+The last element pushed onto the stack is the last element popped off of the stack.
+
+
+5.
+Question 5
+Consider a queue in which we have performed nn enqueues followed by nn dequeues. Which of the following are true statements concerning this sequence of operations?
+
+
+1 / 1 point
+
+The last element enqueued into the queue is the first element dequeued out of the queue.
+
+
+
+The first element enqueued into the queue is the first element dequeued out of the queue.
+
+
+Correct
+
+The first element enqueued into the queue is the last element dequeued out of the queue.
+
+
+
+The last element enqueued into the queue is the last element dequeued out of the queue.
+
+
+Correct
+6.
+Question 6
+ 2D grids
+Review the provided implementation for this week's grid class. In this implementation, the methods \color{red}{\verb|four_neighbors|}four_neighbors and \color{red}{\verb|eight_neighbors|}eight_neighbors treat the boundaries of the grid as being impassable.  
+
+An alternative approach is to treat cells with the same row index on the left and right boundaries as being adjacent and cells with the same column index on the top and bottom boundaries as being adjacent.  The thick lines in the figure below indicate that the cells \color{red}{\verb|(1, 0)|}(1, 0) and \color{red}{\verb|(1, 8)|}(1, 8) are horizontally adjacent while the cells \color{red}{\verb|(0, 6)|}(0, 6) and \color{red}{\verb|(5, 6)|}(5, 6) are vertically adjacent.
+
+
+Which of the following code fragments correctly computes \color{red}{\verb|four_neighbors(row, col)|}four_neighbors(row, col) when the top/bottom rows and left/right columns are treated as being adjacent?
+
+
+1 / 1 point
+
+5
+up = (row - 1) % (self._grid_height + 1)
+down = (row + 1) % (self._grid_height + 1)
+left = (col - 1) % (self._grid_width + 1)
+right = (col + 1) % (self._grid_width + 1)
+return [[up, col], [down, col], [row, left], [row, right]]
+
+
+12345
+up = (row - 1) % (self._grid_height - 1)
+down = (row + 1) % (self._grid_height - 1)
+left = (col - 1) % (self._grid_width - 1)
+right = (col + 1) % (self._grid_width - 1)
+return [[up, col], [down, col], [row, left], [row, right]]
+
+
+12345
+up = (row - 1) % self._grid_height
+down = (row + 1) % self._grid_height
+left = (col - 1) % self._grid_width
+right = (col + 1) % self._grid_width
+return [[up, col], [down, col], [row, left], [row, right]]
+
+
+12345
+up = (row - 1) % self._grid_width
+down = (row + 1) % self._grid_width
+left = (col - 1) % self._grid_height
+right = (col + 1) % self._grid_height
+return [[up, col], [down, col], [row, left], [row, right]]
+
+Correct
+Yes.  This version computes neighbors correctly.
+
+7.
+Question 7
+Breadth first search
+Consider the wildfire demo from lecture, which line in the implementation of \color{red}{\verb|update_boundary|}update_boundary checks whether the fire can spread to an unburned cell?
+
+
+1 / 1 point
+
+1
+self.set_full(neighbor[0], neighbor[1])
+
+
+1
+neighbors = self.four_neighbors(cell_index[0], cell_index[1])
+
+
+1
+if self.is_empty(neighbor[0], neighbor[1]):
+
+
+1
+for neighbor in neighbors:
+
+Correct
+Yes.  This line checks whether the neighbor cell is unburned (\color{red}{\verb|EMPTY|}EMPTY) or burned (\color{red}{\verb|FULL|}FULL).
+
+8.
+Question 8
+Consider the case in which one steps through the entire breadth first search of the grid in the wildfire demonstration.  Which of the following expressions grows at the same rate as the number of statements executed during this breadth first search? Assume the grid has size mm-by-nn. 
+
+
+1 / 1 point
+
+2^{m + n}2 
+m+n
+ 
+
+
+
+m^2 \ n^2m 
+2
+  n 
+2
+ 
+
+
+
+m + nm+n
+
+
+
+m \ nm n
+
+
+Correct
+Yes. The number of statement executed during breadth first search is proportional to the size of the grid, which is m \times nm×n.
+
+9.
+Question 9
+Depth first search
+Complete this template and implement a \color{red}{\verb|Stack|}Stack class.  Once your implementation is complete, uncomment the test code at the end of the template and enter the number printed out by this template.
+
+You may wish to create your own test data if you are having trouble with this problem.
+
+
+1 / 1 point
+77
+Correct
+Correct.
+
+10.
+Question 10
+Take the provided \color{red}{\verb|Queue|}Queue class available here and modify the \color{red}{\verb|enqueue|}enqueue and \color{red}{\verb|dequeue|}dequeue methods to behave like the \color{red}{\verb|push|}push and \color{red}{\verb|pop|}pop methods for your \color{red}{\verb|Stack|}Stack class.
+
+Save this modified class definition.  Then, take the wildfire demo and import this modified definition for the \color{red}{\verb|Queue|}Queue class at the top of the wildfire demo code.  In CodeSkulptor, the modified import statement would have the form:
+
+1
+import userXX_XXXXX as poc_queue
+Now, run this modified demo and add a single cell in the middle of the canvas to the boundary queue prior to starting the search. Which of the images below correspond to a possible state of the grid during the resulting depth first search?
+
+
+1 / 1 point
+
+
+
+Correct
+
+
+
+Correct
+
+
+
+
+
+
+Correct
