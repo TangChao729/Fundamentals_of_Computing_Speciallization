@@ -8,49 +8,15 @@ Question 1
 
 Growth of functions
 Review the math notes on the growth of functions.  Which of the following functions grow at the same rate as  \frac{1}{2} n ^ 2 - 5 n  + 20 
-2
-1
-​
- n 
-2
- −5n+20?
-
-
-1 / 1 point
-
-nn
-
-
-
-n^2n 
-2
- 
-
-
-
-n \log(n)nlog(n)
-
-
-
-n^3n 
-3
- 
-
-
-
-11
+A: n 
+_B_: n^2 
+C: nlog(n)
+D: n^3
+E: 1
 
 
 Correct
-Correct.  The ratio of n^2n 
-2
-  and \frac{1}{2} n ^ 2 - 5 n  + 20 
-2
-1
-​
- n 
-2
- −5n+20 tends to 22 as nn grows large.
+Correct.  The ratio of n^2n and \frac{1}{2} n ^ 2 −5n+20 tends to 22 as nn grows large.
 
 2.
 Question 2
@@ -61,25 +27,10 @@ The fastest algorithms for sorting a list of size nn share a bound (specified as
 Use a web search engine (like Google) to look up this estimate and select the answer below that grows at the same rate as this expression.
 
 
-1 / 1 point
-
-n \log(n)nlog(n) comparisons
-
-
-
-2^n2 
-n
-  comparisons.
-
-
-
-nn comparisons
-
-
-
-n^2n 
-2
-  comparisons.
+_A_: nlog(n) comparisons
+B: 2^n comparisons
+C: n comparisons
+D: n^2 comparisons.
 
 
 Correct
@@ -89,24 +40,10 @@ Yes.  In fact, you can prove that comparison sorts require some multiple of n \l
 Question 3
 Review this week's practice activity on sorting strings.   The activity discusses a grid-based method for sorting strings that does not require comparisons.   Given a list of nn three-letter words, which expression grows as the same rate as the number of statements executed during this sort? 
 
-
-1 / 1 point
-
-n^2n 
-2
- 
-
-
-
-\log(n)log(n)
-
-
-
-nn
-
-
-
-n \log(n)nlog(n)
+A: n^2
+B: log(n)
+_C_: n
+D: nlog(n)
 
 
 Correct
@@ -118,22 +55,19 @@ Stacks and queues
 Consider a stack in which we have performed nn pushes followed by nn pops. Which of the following are true statements concerning this sequence of operations?
 
 
-1 / 1 point
-
+A:
 The last element pushed onto the stack is the first element popped off of the stack.
 
 
-Correct
-
+_B_: 
 The first element pushed onto the stack is the last element popped off of the stack.
 
 
-Correct
-
+_C_:
 The first element pushed onto the stack is the first element popped off of the stack.
 
 
-
+D:
 The last element pushed onto the stack is the last element popped off of the stack.
 
 
@@ -142,21 +76,19 @@ Question 5
 Consider a queue in which we have performed nn enqueues followed by nn dequeues. Which of the following are true statements concerning this sequence of operations?
 
 
-1 / 1 point
-
+_A_:
 The last element enqueued into the queue is the first element dequeued out of the queue.
 
 
-
+B:
 The first element enqueued into the queue is the first element dequeued out of the queue.
 
 
-Correct
-
+_C_:
 The first element enqueued into the queue is the last element dequeued out of the queue.
 
 
-
+D:
 The last element enqueued into the queue is the last element dequeued out of the queue.
 
 
@@ -171,10 +103,7 @@ An alternative approach is to treat cells with the same row index on the left an
 
 Which of the following code fragments correctly computes \color{red}{\verb|four_neighbors(row, col)|}four_neighbors(row, col) when the top/bottom rows and left/right columns are treated as being adjacent?
 
-
-1 / 1 point
-
-5
+A:
 up = (row - 1) % (self._grid_height + 1)
 down = (row + 1) % (self._grid_height + 1)
 left = (col - 1) % (self._grid_width + 1)
@@ -182,7 +111,7 @@ right = (col + 1) % (self._grid_width + 1)
 return [[up, col], [down, col], [row, left], [row, right]]
 
 
-12345
+B:
 up = (row - 1) % (self._grid_height - 1)
 down = (row + 1) % (self._grid_height - 1)
 left = (col - 1) % (self._grid_width - 1)
@@ -190,7 +119,7 @@ right = (col + 1) % (self._grid_width - 1)
 return [[up, col], [down, col], [row, left], [row, right]]
 
 
-12345
+_C_:
 up = (row - 1) % self._grid_height
 down = (row + 1) % self._grid_height
 left = (col - 1) % self._grid_width
@@ -198,7 +127,7 @@ right = (col + 1) % self._grid_width
 return [[up, col], [down, col], [row, left], [row, right]]
 
 
-12345
+D:
 up = (row - 1) % self._grid_width
 down = (row + 1) % self._grid_width
 left = (col - 1) % self._grid_height
@@ -214,21 +143,19 @@ Breadth first search
 Consider the wildfire demo from lecture, which line in the implementation of \color{red}{\verb|update_boundary|}update_boundary checks whether the fire can spread to an unburned cell?
 
 
-1 / 1 point
-
-1
+A:
 self.set_full(neighbor[0], neighbor[1])
 
 
-1
+B:
 neighbors = self.four_neighbors(cell_index[0], cell_index[1])
 
 
-1
+_C_:
 if self.is_empty(neighbor[0], neighbor[1]):
 
 
-1
+D:
 for neighbor in neighbors:
 
 Correct
@@ -239,28 +166,17 @@ Question 8
 Consider the case in which one steps through the entire breadth first search of the grid in the wildfire demonstration.  Which of the following expressions grows at the same rate as the number of statements executed during this breadth first search? Assume the grid has size mm-by-nn. 
 
 
-1 / 1 point
+A:
+2^{m + n}
 
-2^{m + n}2 
-m+n
- 
+B:
+m^2 * n^
 
+C:
+m + n
 
-
-m^2 \ n^2m 
-2
-  n 
-2
- 
-
-
-
-m + nm+n
-
-
-
-m \ nm n
-
+_D_:
+m*n
 
 Correct
 Yes. The number of statement executed during breadth first search is proportional to the size of the grid, which is m \times nm×n.
@@ -272,11 +188,8 @@ Complete this template and implement a \color{red}{\verb|Stack|}Stack class.  On
 
 You may wish to create your own test data if you are having trouble with this problem.
 
+_77_
 
-1 / 1 point
-77
-Correct
-Correct.
 
 10.
 Question 10
@@ -288,20 +201,3 @@ Save this modified class definition.  Then, take the wildfire demo and import th
 import userXX_XXXXX as poc_queue
 Now, run this modified demo and add a single cell in the middle of the canvas to the boundary queue prior to starting the search. Which of the images below correspond to a possible state of the grid during the resulting depth first search?
 
-
-1 / 1 point
-
-
-
-Correct
-
-
-
-Correct
-
-
-
-
-
-
-Correct
